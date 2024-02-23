@@ -1,13 +1,13 @@
 import { useState, createContext } from 'react';
 
-export const CommonContext = createContext();
+export const ProductsContext = createContext();
 
-export default CommonProvider = ({ children }) => {
+export default ProductsProvider = ({ children }) => {
   const [produtos, setProdutos] = useState([]);
 
   return (
-    <CommonContext.Provider value={{ produtos, setProdutos }}>
+    <ProductsContext.Provider value={{ produtos, setProdutos }}>
       {children}
-    </CommonContext.Provider>
+    </ProductsContext.Provider>
   )
 };

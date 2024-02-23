@@ -1,15 +1,19 @@
-import { SafeAreaView } from 'react-native';
-import { BottomNavigation } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
 import { useState } from 'react';
 
 import HomeScreen from './components/HomeScreen';
 import FormScreen from './components/FormScreeen';
+import Navigation from './components/Navigation';
 
-export default function App() {
+import ProductsProvider from './Context/Produtos';
+
+const App = () => {
+
   return (
-    <SafeAreaView>
-      <HomeScreen />
-      <FormScreen />
-    </SafeAreaView>
+    <ProductsProvider>
+      <Navigation />
+    </ProductsProvider>
   );
 }
+
+export default App
