@@ -15,7 +15,7 @@ const App = () => {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <ProductsProvider>
-          <Header title="Índice de Preços Toledo - IPT" />
+          <Header title="IPT" />
           <Navigation />
         </ProductsProvider>
       </SafeAreaView>

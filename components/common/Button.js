@@ -10,7 +10,7 @@ export default ButtonComponent = ({ onPress, title }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#003761',
+    backgroundColor: '#d58500',
     padding: 10,
     borderRadius: 5,
     marginVertical: 5,

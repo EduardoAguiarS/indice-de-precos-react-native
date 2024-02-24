@@ -1,5 +1,6 @@
-import { Text, View, StyleSheet, Button } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 import { useState, useContext } from 'react';
+import { Snackbar } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import InputComponent from './common/Input'
@@ -14,10 +15,14 @@ export default FormScreen = ({ navigation }) => {
   const [nome, setNome] = useState('')
   const [unidadeMedida, setUnidadeMedida] = useState('')
   const [preco, setPreco] = useState('')
-
   const [date, setDate] = useState(new Date())
+
   const [show, setShow] = useState(false)
   const [mode, setMode] = useState('date')
+
+  const [visible, setVisible] = useState(false)
+  const onDismissSnackBar = () => setVisible(false)
+  const [message, setMessage] = useState('')
 
   const onChange = (e, selected) => {
     setShow(false)
@@ -31,12 +36,14 @@ export default FormScreen = ({ navigation }) => {
 
   const onSubmit = () => {
     if (!estabelecimento.trim() || !categoria.trim() || !nome.trim() || !unidadeMedida.trim() || !preco.trim()) {
-      alert('Preencha todos os campos')
+      setMessage('Preencha todos os campos!')
+      setVisible(true)
       return
     }
     for (let i = 0; i < produtos.length; i++) {
       if (produtos[i]?.nome === nome && produtos[i]?.estabelecimento === estabelecimento) {
-        alert('Produto ja existe')
+        setMessage('Produto já foi cadastrado!')
+        setVisible(true)
         return
       }
     }
@@ -48,7 +55,8 @@ export default FormScreen = ({ navigation }) => {
     setUnidadeMedida('')
     setPreco('')
     setDate(new Date())
-    alert('Produto cadastrado')
+    setVisible(true)
+    setMessage('Produto cadastrado com sucesso!')
   }
 
   return (
@@ -74,6 +82,21 @@ export default FormScreen = ({ navigation }) => {
           />
         )
       }
+
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+        <Snackbar
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+          duration={3000}
+          // center element
+          style={{ backgroundColor: '#003661', color: '#fff' }}
+          action={{
+            label: 'Ok',
+          }}
+        >
+          {message}
+        </Snackbar>
+      </View>
     </View>
   )
 }
@@ -82,15 +105,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 10
+    padding: 10,
+    width: '100%',
+
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     marginVertical: 10,
     textAlign: 'center',
     textTransform: 'uppercase',
-    color: '#d58500'
+    color: '#000'
   },
   dateText: {
     color: '#717171',
