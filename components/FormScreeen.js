@@ -7,9 +7,8 @@ import InputComponent from './common/Input'
 import ButtonComponent from './common/Button'
 
 import { ProductsContext } from '../Context/Produtos'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default FormScreen = ({ navigation }) => {
+export default FormScreen = () => {
   const { produtos, setProdutos } = useContext(ProductsContext)
   const [estabelecimento, setEstabelecimento] = useState('')
   const [categoria, setCategoria] = useState('')

@@ -24,8 +24,7 @@ const Navigation = () => {
           tabBarInactiveBackgroundColor: '#003661',
           tabBarStyle: {
             backgroundColor: '#003661',
-            height: 52,
-            padding: 5
+            paddingVertical: 5
           },
 
           tabBarIcon: ({ focused, color, size }) => {

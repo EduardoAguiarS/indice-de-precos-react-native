@@ -1,10 +1,9 @@
 import { Text, View, StyleSheet, ScrollView } from 'react-native'
-import { useContext, useState, useEffect } from 'react';
+import { useContext } from 'react';
 import { ProductsContext } from '../Context/Produtos'
 import { Card } from 'react-native-paper';
 
-export default HomeScreen = ({ navigation }) => {
-  const optionsPerPage = [5, 10, 15, 20]
+export default HomeScreen = () => {
   const { produtos, setProdutos } = useContext(ProductsContext)
 
   const deleteProduct = (index) => {
@@ -61,7 +60,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 5,
     padding: 5,
-    marginVertical: 5,
     borderWidth: 1,
     borderColor: '#F6F6F6'
   },
