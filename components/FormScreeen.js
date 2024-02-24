@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, Pressable, Platform, ScrollView } from 'react-native'
 import { useState, useContext } from 'react';
 import { Snackbar } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -7,6 +7,7 @@ import InputComponent from './common/Input'
 import ButtonComponent from './common/Button'
 
 import { ProductsContext } from '../Context/Produtos'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default FormScreen = ({ navigation }) => {
   const { produtos, setProdutos } = useContext(ProductsContext)
@@ -15,27 +16,37 @@ export default FormScreen = ({ navigation }) => {
   const [nome, setNome] = useState('')
   const [unidadeMedida, setUnidadeMedida] = useState('')
   const [preco, setPreco] = useState('')
-  const [date, setDate] = useState(new Date())
+  const [dateRegistration, setDateRegistration] = useState('')
 
-  const [show, setShow] = useState(false)
-  const [mode, setMode] = useState('date')
+  const [date, setDate] = useState(new Date())
+  const [showPicker, setShowPicker] = useState(false)
+
+  const toggleDatePicker = () => {
+    setShowPicker(!showPicker)
+  }
+
+  const onChange = ({ type }, selectedDate) => {
+    if (type === 'set') {
+      const currentDate = selectedDate
+      if (Platform.OS === 'android') {
+        toggleDatePicker()
+      }
+      setDate(currentDate)
+      setDateRegistration(currentDate.toLocaleDateString('pt-BR'))
+    } else {
+      toggleDatePicker()
+    }
+  }
+
+  const dateInputRegex = /^\d{1,2}\/\d{1,2}\/\d{4}$/
+  const priceInputRegex = /^\d+(\.\d{1,2})?$/
 
   const [visible, setVisible] = useState(false)
   const onDismissSnackBar = () => setVisible(false)
   const [message, setMessage] = useState('')
 
-  const onChange = (e, selected) => {
-    setShow(false)
-    setDate(selected)
-  }
-
-  const showMode = (currentMode) => {
-    setShow(true)
-    setMode(currentMode)
-  }
-
   const onSubmit = () => {
-    if (!estabelecimento.trim() || !categoria.trim() || !nome.trim() || !unidadeMedida.trim() || !preco.trim()) {
+    if (!estabelecimento.trim() || !categoria.trim() || !nome.trim() || !unidadeMedida.trim() || !preco.trim() || !dateRegistration) {
       setMessage('Preencha todos os campos!')
       setVisible(true)
       return
@@ -48,56 +59,81 @@ export default FormScreen = ({ navigation }) => {
       }
     }
 
-    setProdutos([...produtos, { estabelecimento, categoria, nome, unidadeMedida, preco, date }])
+    if (!dateInputRegex.test(dateRegistration)) {
+      setMessage('Data inválida! Formato: dd/mm/aaaa')
+      setVisible(true)
+      return
+    }
+
+    if (preco <= 0 || !priceInputRegex.test(preco)) {
+      setMessage('Preço inválido!')
+      setVisible(true)
+      return
+    }
+
+    setProdutos([...produtos, { estabelecimento, categoria, nome, unidadeMedida, preco, dateRegistration }])
     setEstabelecimento('')
     setCategoria('')
     setNome('')
     setUnidadeMedida('')
     setPreco('')
-    setDate(new Date())
+    setDateRegistration('')
     setVisible(true)
     setMessage('Produto cadastrado com sucesso!')
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Cadastrar Produto</Text>
-      <InputComponent label={"Estabelecimento"} placeholder={"Supermercado XPTO"} value={estabelecimento} onChange={setEstabelecimento} />
-      <InputComponent label={"Categoria"} placeholder={"Bebidas"} value={categoria} onChange={setCategoria} />
-      <InputComponent label={"Nome"} placeholder={"Coca-cola"} value={nome} onChange={setNome} />
-      <InputComponent label={"Unidade de Medida"} placeholder={"KG"} value={unidadeMedida} onChange={setUnidadeMedida} />
-      <InputComponent label={"Preço"} placeholder={"5.00"} value={preco} onChange={setPreco} type={"number-pad"} />
-      <Text style={styles.dateText} onPress={() => showMode('date')}>{date.toLocaleDateString('pt-BR')}</Text>
-      <ButtonComponent title="Cadastrar" onPress={() => onSubmit()} />
-      {
-        show && (
-          <DateTimePicker
-            value={date}
-            mode={mode}
-            is24Hour={true}
-            onChange={onChange}
-            display="default"
-            locale="pt-BR"
-            testID="dateTimePicker"
-          />
-        )
-      }
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
+      <View style={styles.container}>
+        <Text style={styles.title}>Cadastrar Produto</Text>
+        <InputComponent label={"Estabelecimento"} placeholder={"Supermercado XPTO"} value={estabelecimento} onChange={setEstabelecimento} />
+        <InputComponent label={"Categoria"} placeholder={"Bebidas"} value={categoria} onChange={setCategoria} />
+        <InputComponent label={"Nome"} placeholder={"Coca-cola"} value={nome} onChange={setNome} />
+        <InputComponent label={"Unidade de Medida"} placeholder={"KG"} value={unidadeMedida} onChange={setUnidadeMedida} />
+        <InputComponent label={"Preço"} placeholder={"5.00"} value={preco} onChange={setPreco} type={"number-pad"} />
+        {
+          showPicker && (
+            <DateTimePicker
+              mode="date"
+              value={date}
+              display="default"
+              onChange={onChange}
+              style={styles.datePicker}
+            />
+          )
+        }
 
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-        <Snackbar
-          visible={visible}
-          onDismiss={onDismissSnackBar}
-          duration={3000}
-          // center element
-          style={{ backgroundColor: '#003661', color: '#fff' }}
-          action={{
-            label: 'Ok',
-          }}
-        >
-          {message}
-        </Snackbar>
+        {
+          Platform.OS !== 'android' && (
+            <InputComponent label={"Data de Registro"} placeholder={"01/01/2024"} value={dateRegistration} onChange={setDateRegistration} editable={true} />
+          )
+        }
+
+        {
+          Platform.OS === 'android' && (
+            <Pressable onPress={toggleDatePicker}>
+              <InputComponent label={"Data de Registro"} placeholder={"01/01/2024"} value={dateRegistration} onChange={setDateRegistration} editable={false} press={toggleDatePicker} />
+            </Pressable>
+          )
+        }
+
+        <ButtonComponent title="Cadastrar" onPress={() => onSubmit()} />
+
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+          <Snackbar
+            visible={visible}
+            onDismiss={onDismissSnackBar}
+            duration={3000}
+            style={{ backgroundColor: '#003661', color: '#fff' }}
+            action={{
+              label: 'Ok',
+            }}
+          >
+            {message}
+          </Snackbar>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -115,14 +151,8 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: '#000'
   },
-  dateText: {
-    color: '#717171',
-    fontSize: 16,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginVertical: 5,
-    borderRadius: 5,
-    backgroundColor: '#F6F6F6',
-  }
+  datePicker: {
+    height: 120,
+    marginTop: -10,
+  },
 })

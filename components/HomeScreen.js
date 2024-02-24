@@ -27,7 +27,7 @@ export default HomeScreen = ({ navigation }) => {
                       <Text><Text style={{ fontWeight: 'bold' }}>Categoria: </Text>{item.categoria}</Text>
                       <Text><Text style={{ fontWeight: 'bold' }}>Unidade de Medida: </Text> {item.unidadeMedida}</Text>
                       <Text><Text style={{ fontWeight: 'bold' }}>Preço: </Text> {Number(item.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Text>
-                      <Text><Text style={{ fontWeight: 'bold' }}>Data: </Text> {item.date.toLocaleDateString('pt-BR')}</Text>
+                      <Text><Text style={{ fontWeight: 'bold' }}>Data: </Text> {item.dateRegistration}</Text>
                     </Card.Content>
                   </Card>
                 ))
@@ -86,6 +86,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardContent: {
-    marginVertical: 8,
+    marginTop: 8,
   }
 })
