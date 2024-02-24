@@ -105,12 +105,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 20,
+    padding: 20
   },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 10,
+    marginBottom: 10,
     textAlign: 'center',
     textTransform: 'uppercase',
     color: '#000'
