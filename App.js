@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-import { useState } from 'react';
 
-import HomeScreen from './components/HomeScreen';
-import FormScreen from './components/FormScreeen';
 import Navigation from './components/Navigation';
 import Header from './components/common/Header';
 
