@@ -1,6 +1,6 @@
 import { TextInput } from 'react-native-paper'
 
-export default InputComponent = ({ value, onChange, label, placeholder }) => {
+export default InputComponent = ({ value, onChange, label, placeholder, type }) => {
 
   return (
     <TextInput
@@ -11,6 +11,7 @@ export default InputComponent = ({ value, onChange, label, placeholder }) => {
       theme={{ colors: { primary: '#003761', text: '#003761' } }}
       value={value}
       onChangeText={onChange}
+      keyboardType={type}
     />
   )
 }

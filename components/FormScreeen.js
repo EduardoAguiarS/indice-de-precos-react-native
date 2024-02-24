@@ -47,7 +47,7 @@ export default FormScreen = ({ navigation }) => {
     setNome('')
     setUnidadeMedida('')
     setPreco('')
-    setDate(null)
+    setDate(new Date())
     alert('Produto cadastrado')
   }
 
@@ -58,8 +58,8 @@ export default FormScreen = ({ navigation }) => {
       <InputComponent label={"Categoria"} placeholder={"Bebidas"} value={categoria} onChange={setCategoria} />
       <InputComponent label={"Nome"} placeholder={"Coca-cola"} value={nome} onChange={setNome} />
       <InputComponent label={"Unidade de Medida"} placeholder={"KG"} value={unidadeMedida} onChange={setUnidadeMedida} />
-      <InputComponent label={"Preço"} placeholder={"5.00"} value={preco} onChange={setPreco} />
-      <Text style={styles.dateText} onPress={() => showMode('date')}>{date.toLocaleDateString()} </Text>
+      <InputComponent label={"Preço"} placeholder={"5.00"} value={preco} onChange={setPreco} type={"number-pad"} />
+      <Text style={styles.dateText} onPress={() => showMode('date')}>{date.toLocaleDateString('pt-BR')}</Text>
       <ButtonComponent title="Cadastrar" onPress={() => onSubmit()} />
       {
         show && (
@@ -70,12 +70,10 @@ export default FormScreen = ({ navigation }) => {
             onChange={onChange}
             display="default"
             locale="pt-BR"
-            onChange={onChange}
             testID="dateTimePicker"
           />
         )
       }
-      <Text>{JSON.stringify(produtos)}</Text>
     </View>
   )
 }
