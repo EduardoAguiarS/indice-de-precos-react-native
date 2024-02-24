@@ -5,6 +5,7 @@ import { useState } from 'react';
 import HomeScreen from './components/HomeScreen';
 import FormScreen from './components/FormScreeen';
 import Navigation from './components/Navigation';
+import Header from './components/common/Header';
 
 import ProductsProvider from './Context/Produtos';
 
@@ -14,6 +15,7 @@ const App = () => {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <ProductsProvider>
+          <Header title="Índice de Preços Toledo - IPT" />
           <Navigation />
         </ProductsProvider>
       </SafeAreaView>
@@ -26,5 +28,7 @@ export default App
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
+    backgroundColor: '#003761',
   }
 })

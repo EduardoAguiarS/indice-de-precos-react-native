@@ -24,6 +24,9 @@ const Navigation = () => {
       renderScene={renderScene}
       barStyle={styles.bar}
       activeColor="#d58500"
+      shifting={true}
+      initialRouteName="home"
+      sceneAnimationEnabled={true}
     />
   );
 }
