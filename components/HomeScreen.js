@@ -15,10 +15,10 @@ export default HomeScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
       <View style={styles.container}>
-        <Text style={styles.title}>Lista de Produtos</Text>
         {
           produtos.length > 0 ?
             <>
+              <Text style={styles.title}>Lista de Produtos</Text>
               {
                 produtos.map((item, index) => (
                   <Card key={item.nome + item.estabelecimento + index} style={styles.card}>
@@ -34,7 +34,9 @@ export default HomeScreen = ({ navigation }) => {
               }
             </>
             :
-            <Text style={{ textAlign: 'center', marginTop: 20 }}>Nenhum registro encontrado</Text>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16, color: '#717171', textTransform: 'uppercase' }}>Nenhum registro encontrado</Text>
+            </View>
         }
       </View>
     </ScrollView>
