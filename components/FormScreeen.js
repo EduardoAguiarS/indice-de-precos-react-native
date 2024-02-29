@@ -1,15 +1,16 @@
 import { Text, View, StyleSheet, Pressable, Platform, ScrollView } from 'react-native'
-import { useState, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { Snackbar } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { db } from '../Firebase';
+import { ref, set, onValue, push } from "firebase/database";
+import { useIsFocused } from '@react-navigation/native';
 
 import InputComponent from './common/Input'
 import ButtonComponent from './common/Button'
 
-import { ProductsContext } from '../Context/Produtos'
-
 export default FormScreen = () => {
-  const { produtos, setProdutos } = useContext(ProductsContext)
+  const [produtos, setProdutos] = useState([])
   const [estabelecimento, setEstabelecimento] = useState('')
   const [categoria, setCategoria] = useState('')
   const [nome, setNome] = useState('')
@@ -19,6 +20,52 @@ export default FormScreen = () => {
 
   const [date, setDate] = useState(new Date())
   const [showPicker, setShowPicker] = useState(false)
+
+  const [visible, setVisible] = useState(false)
+  const onDismissSnackBar = () => setVisible(false)
+  const [message, setMessage] = useState('')
+
+  const inserirProduto = () => {
+    const newKey = push(ref(db, 'prod')).key
+    set(ref(db, 'prod/' + newKey), {
+      estabelecimento,
+      categoria,
+      nome,
+      unidadeMedida,
+      preco,
+      dateRegistration
+    }).then(() => {
+
+    }).catch((error) => {
+      setMessage(error)
+    })
+  }
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      let lista = []
+      onValue(ref(db, 'prod'), (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          const childKey = childSnapshot.key
+          const childData = childSnapshot.val()
+
+          lista.push({
+            key: childKey,
+            estabelecimento: childData.estabelecimento,
+            categoria: childData.categoria,
+            nome: childData.nome,
+            unidadeMedida: childData.unidadeMedida,
+            preco: childData.preco,
+            dateRegistration: childData.dateRegistration
+          })
+        })
+
+        setProdutos(lista)
+      })
+    }
+  }, [isFocused]);
 
   const toggleDatePicker = () => {
     setShowPicker(!showPicker)
@@ -40,21 +87,19 @@ export default FormScreen = () => {
   const dateInputRegex = /^\d{1,2}\/\d{1,2}\/\d{4}$/
   const priceInputRegex = /^\d+(\.\d{1,2})?$/
 
-  const [visible, setVisible] = useState(false)
-  const onDismissSnackBar = () => setVisible(false)
-  const [message, setMessage] = useState('')
-
   const onSubmit = () => {
     if (!estabelecimento.trim() || !categoria.trim() || !nome.trim() || !unidadeMedida.trim() || !preco.trim() || !dateRegistration) {
       setMessage('Preencha todos os campos!')
       setVisible(true)
       return
     }
-    for (let i = 0; i < produtos.length; i++) {
-      if (produtos[i]?.nome === nome && produtos[i]?.estabelecimento === estabelecimento) {
-        setMessage('Produto já foi cadastrado!')
-        setVisible(true)
-        return
+    if (produtos) {
+      for (let i = 0; i < produtos.length; i++) {
+        if (produtos[i]?.nome === nome && produtos[i]?.estabelecimento === estabelecimento) {
+          setMessage('Produto já foi cadastrado!')
+          setVisible(true)
+          return
+        }
       }
     }
 
@@ -70,19 +115,19 @@ export default FormScreen = () => {
       return
     }
 
-    setProdutos([...produtos, { estabelecimento, categoria, nome, unidadeMedida, preco, dateRegistration }])
+    inserirProduto()
     setEstabelecimento('')
     setCategoria('')
     setNome('')
     setUnidadeMedida('')
     setPreco('')
     setDateRegistration('')
-    setVisible(true)
     setMessage('Produto cadastrado com sucesso!')
+    setVisible(true)
   }
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.container}>
         <Text style={styles.title}>Cadastrar Produto</Text>
         <InputComponent label={"Estabelecimento"} placeholder={"Supermercado XPTO"} value={estabelecimento} onChange={setEstabelecimento} />

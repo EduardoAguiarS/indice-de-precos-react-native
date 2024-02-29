@@ -1,14 +1,46 @@
 import { Text, View, StyleSheet, ScrollView } from 'react-native'
-import { useContext } from 'react';
-import { ProductsContext } from '../Context/Produtos'
+import { useState, useEffect } from 'react';
 import { Card } from 'react-native-paper';
+import { db } from '../Firebase';
+import { ref, set, onValue, push, remove } from "firebase/database";
+import { useIsFocused } from '@react-navigation/native';
 
 export default HomeScreen = () => {
-  const { produtos, setProdutos } = useContext(ProductsContext)
+  const [produtos, setProdutos] = useState([])
+
+  const isFocused = useIsFocused();
+
+  const getData = () => {
+    let lista = []
+    onValue(ref(db, 'prod'), (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const childKey = childSnapshot.key
+        const childData = childSnapshot.val()
+
+        lista.push({
+          key: childKey,
+          estabelecimento: childData.estabelecimento,
+          categoria: childData.categoria,
+          nome: childData.nome,
+          unidadeMedida: childData.unidadeMedida,
+          preco: childData.preco,
+          dateRegistration: childData.dateRegistration
+        })
+      })
+
+      setProdutos(lista)
+    })
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      getData()
+    }
+  }, [isFocused]);
 
   const deleteProduct = (index) => {
-    produtos.splice(index, 1)
-    setProdutos([...produtos])
+    remove(ref(db, 'prod/' + produtos[index].key))
+    getData()
   }
 
   return (
