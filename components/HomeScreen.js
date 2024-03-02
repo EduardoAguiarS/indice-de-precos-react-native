@@ -28,7 +28,9 @@ export default HomeScreen = () => {
         })
       })
 
-      setProdutos(lista)
+      if (lista.length > 0) {
+        setProdutos(lista)
+      }
     })
   }
 

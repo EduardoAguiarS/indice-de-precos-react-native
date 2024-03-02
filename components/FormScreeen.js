@@ -62,7 +62,9 @@ export default FormScreen = () => {
           })
         })
 
-        setProdutos(lista)
+        if (lista.length > 0) {
+          setProdutos(lista)
+        }
       })
     }
   }, [isFocused]);

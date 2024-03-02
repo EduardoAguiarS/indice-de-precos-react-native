@@ -2,6 +2,8 @@
 #### Trabalho da materia - Desenvolvimento de Aplicativos Móveis ####
 
 ### Como rodar o projeto ###
+Versão do node: 20.11.1
+
 Instalar as dependências:
 ```bash
 npm install
