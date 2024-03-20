@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyCfJ2EsHrKr-YuFHpOHFGi_9Hw_WtBZdSk",
   authDomain: "rn-realtime-db.firebaseapp.com",
   databaseURL: "https://rn-realtime-db-default-rtdb.firebaseio.com",
@@ -17,3 +17,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const db = getDatabase(app);
+
+import { useEffect, useState } from "react";
+import { getAuth, onAuthStateChanged, user } from "firebase/auth";
+
+const auth = getAuth();
+
+export function useAuth() {
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user)
+      } else {
+        setUser(null)
+      }
+    })
+    return unsubscribe
+  }, [])
+
+  return { user }
+}
