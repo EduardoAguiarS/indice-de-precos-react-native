@@ -57,7 +57,7 @@ export default SignIn = ({ navigation: navi }) => {
         <InputComponent
           label="Senha"
           value={value.password}
-          secureTextEntry
+          secure={true}
           onChange={text => setValue({ ...value, password: text })}
         />
         <ButtonComponent

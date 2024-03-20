@@ -62,18 +62,22 @@ export default SignUp = ({ navigation: navi }) => {
           label="Email"
           value={value.email}
           onChange={(text) => setValue({ ...value, email: text })}
+          type={'email-address'}
+          keyboardType={'email-address'}
         />
         <InputComponent
           label="Senha"
           value={value.password}
           type="password"
           onChange={(text) => setValue({ ...value, password: text })}
+          secure={true}
         />
         <InputComponent
           label="Confirmar Senha"
           value={value.confirmPassword}
           type="password"
           onChange={(text) => setValue({ ...value, confirmPassword: text })}
+          secure={true}
         />
         <ButtonComponent
           title="Cadastrar"

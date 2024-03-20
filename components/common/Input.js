@@ -1,6 +1,6 @@
 import { TextInput, StyleSheet, Text, View } from 'react-native'
 
-export default InputComponent = ({ value, onChange, label, placeholder, type, editable, press }) => {
+export default InputComponent = ({ value, onChange, label, placeholder, type, editable, press, secure = false }) => {
 
   return (
     <View>
@@ -15,6 +15,7 @@ export default InputComponent = ({ value, onChange, label, placeholder, type, ed
         keyboardType={type}
         editable={editable}
         onPressIn={press}
+        secureTextEntry={secure}
       />
     </View>
   )
